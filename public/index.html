@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Validator | APIVerve Tutorial</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 { color: #333; font-size: 24px; margin-bottom: 8px; text-align: center; }
+    .subtitle { color: #666; font-size: 14px; text-align: center; margin-bottom: 30px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; color: #555; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+    input:focus { outline: none; border-color: #667eea; }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .result { margin-top: 20px; padding: 16px; border-radius: 8px; display: none; }
+    .result.valid { background: #d4edda; border: 1px solid #c3e6cb; }
+    .result.invalid { background: #f8d7da; border: 1px solid #f5c6cb; }
+    .result.error { background: #fff3cd; border: 1px solid #ffc107; }
+    .result h3 { margin-bottom: 10px; }
+    .result p { font-size: 14px; margin: 4px 0; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Email Validator</h1>
+    <p class="subtitle">Check if an email address is valid and deliverable</p>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="test@example.com">
+    </div>
+
+    <button id="validateBtn" onclick="validateEmail()">Validate Email</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    async function validateEmail() {
+      const email = document.getElementById('email').value.trim();
+      const btn = document.getElementById('validateBtn');
+      const result = document.getElementById('result');
+
+      if (!email) {
+        showResult('error', 'Error', 'Please enter an email address');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Validating...';
+      result.style.display = 'none';
+
+      try {
+        const response = await fetch('/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          const status = data.isValid ? 'valid' : 'invalid';
+          const title = data.isValid ? 'Valid Email' : 'Invalid Email';
+          let details = `<p><strong>Email:</strong> ${data.email}</p>`;
+          details += `<p><strong>Domain:</strong> ${data.details.domain}</p>`;
+          details += `<p><strong>Free Email:</strong> ${data.details.isFreeEmail ? 'Yes' : 'No'}</p>`;
+          details += `<p><strong>Company Email:</strong> ${data.details.isCompanyEmail ? 'Yes' : 'No'}</p>`;
+          details += `<p><strong>MX Valid:</strong> ${data.details.mxValid ? 'Yes' : 'No'}</p>`;
+          showResult(status, title, details);
+        } else {
+          showResult('error', 'Error', data.error);
+        }
+      } catch (err) {
+        showResult('error', 'Error', 'Failed to validate email');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Validate Email';
+      }
+    }
+
+    function showResult(status, title, content) {
+      const result = document.getElementById('result');
+      result.className = `result ${status}`;
+      result.innerHTML = `<h3>${title}</h3>${content}`;
+      result.style.display = 'block';
+    }
+
+    document.getElementById('email').addEventListener('keypress', e => {
+      if (e.key === 'Enter') validateEmail();
+    });
+  </script>
+</body>
+</html>
