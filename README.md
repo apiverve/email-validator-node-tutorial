@@ -107,9 +107,10 @@ Validates an email address and returns detailed information.
     "username": "test",
     "isFreeEmail": true,
     "isCompanyEmail": false,
-    "mxValid": true,
-    "smtpValid": true,
-    "hasTypo": false
+    "isMxValid": true,
+    "isSmtpValid": true,
+    "hasTypo": false,
+    "canConnect": true
   }
 }
 ```
@@ -126,9 +127,10 @@ Validates an email address and returns detailed information.
     "username": "bad",
     "isFreeEmail": false,
     "isCompanyEmail": false,
-    "mxValid": false,
-    "smtpValid": false,
-    "hasTypo": false
+    "isMxValid": false,
+    "isSmtpValid": false,
+    "hasTypo": false,
+    "canConnect": false
   }
 }
 ```
@@ -159,14 +161,14 @@ Email validation is essential for:
 
 The API performs multiple validation checks:
 
-| Check | Description |
-|-------|-------------|
-| Format | Valid email syntax (regex) |
-| MX Record | Domain has mail servers configured |
-| SMTP | Mail server accepts connections |
-| Typo Detection | Common domain misspellings |
-| Disposable | Temporary/throwaway email services |
-| Free vs Company | Gmail vs corporate domains |
+| Check | Field | Description |
+|-------|-------|-------------|
+| Format | `isRegexValid` | Valid email syntax |
+| MX Record | `isMxValid` | Domain has mail servers |
+| SMTP | `isSmtpValid` | Mail server accepts connections |
+| Typo Detection | `hasTypo` | Common domain misspellings |
+| Free Email | `isFreeEmail` | Gmail, Yahoo, etc. |
+| Company Email | `isCompanyEmail` | Corporate domain |
 
 ## Customization Ideas
 
