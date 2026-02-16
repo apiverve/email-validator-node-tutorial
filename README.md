@@ -1,6 +1,7 @@
 # Email Validator API | APIVerve API Tutorial
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/Express-4.x-lightgrey)](https://expressjs.com)
 [![APIVerve | Email Validator](https://img.shields.io/badge/APIVerve-Email_Validator-purple)](https://apiverve.com/marketplace/emailvalidator?utm_source=github&utm_medium=tutorial&utm_campaign=email-validator-node-tutorial)
